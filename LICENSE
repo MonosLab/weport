@@ -1,7 +1,7 @@
 Business Source License 1.1 (Monoslab Edition)
 
 License text copyright © 2026 Monoslab, All Rights Reserved.
-"Business Source License" is a trademark of Monoslab.
+"Business Source License" is a trademark of MariaDB Corporation Ab.
 
 Terms
 
@@ -55,17 +55,10 @@ In consideration of the right to use this License’s text and the “Business
 Source License” name and trademark, Licensor covenants to MariaDB, and to all
 other recipients of the licensed work to be provided by Licensor:
 
-1. To specify as the Change License the GPL Version 2.0 or any later version,
-   or a license that is compatible with GPL Version 2.0 or a later version,
-   where “compatible” means that software provided under the Change License can
-   be included in a program with software provided under GPL Version 2.0 or a
-   later version. Licensor may specify additional Change Licenses without
-   limitation.
+1. Change License: GPL Version 2.0 or later
 
-2. To either: (a) specify an additional grant of rights to use that does not
-   impose any additional restriction on the right granted in this License, as
-   the Additional Use Grant; or (b) insert the text “None”.
+2. Additional Use Grant: None
 
-3. To specify a Change Date.
+3. Change Date: March 1, 2030
 
 4. Not to modify this License in any other way.
