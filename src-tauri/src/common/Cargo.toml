@@ -1,0 +1,6 @@
+[package]
+name = "common"
+version = "1.0.0"
+edition = "2024"
+description = "Common utilities and definitions for the weport application."
+authors = ["Kwangsoo Seo", "monoslab <chps74@naver.com>"]

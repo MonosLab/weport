@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>카테고리/주제 선택 페이지</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- TitleBar -->
+  <div class="titlebar">
+    <div class="left-section">
+      <div class="left-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Blue N icon">
+          <rect width="24" height="24" fill="none"/>
+          <!-- Char 'N' icon /--><path d="M6 18V6H9L15 14V6H18V18H15L9 10V18H6Z" fill="#1E6FE3"/>
+          <!-- Char 'M' icon /--><!--path d="M6 18V6H9L12 11L15 6H18V18H15V11L12 16L9 11V18H6Z" fill="#1E6FE3"/-->
+        </svg>
+      </div>
+      <div class="title" id="title">Weport</div>
+    </div>
+    <div class="buttons">
+      <button id="manageItem" class="tab-btn" title="Management" onclick="showScreen('manage-mode', this)">관리</button>
+      <button id="writeReport" class="tab-btn" title="Write" onclick="showScreen('write-mode', this)">작성</button>
+      <button id="viewReport" class="tab-btn" title="View" onclick="showScreen('view-mode', this)">보기</button>
+      <button id="settings" class="tab-btn" title="Settings" onclick="showScreen('settings-mode', this)">⚙️</button>
+    </div>
+  </div>
+  <!-- Tab Contents -->
+  <!-- manage-mode -->
+  <div id="manage-mode" class="tab-content">
+    <button id="add_manageItem" class="fixed-button" title="Add management" onclick="newManageItem()">+</button>
+    <div class="content" id="manage-mode-content">섹션과 카테고리를 관리하는 화면입니다.</div>
+  </div>
+  <!-- write-mode -->
+  <div id="write-mode" class="tab-content">
+    <div id="topBar" class="top-bar">
+      <div class="section">
+        <label for="sectionSelect">구분:</label>
+        <select id="section"></select>
+      </div>
+      <div class="category">
+        <label for="categorySelect">카테고리:</label>
+        <select id="category"></select>
+        <select id="status">
+          <option value="in_progress">진행 중</option>
+          <option value="completed">완료</option>
+          <option value="cancelled">취소</option>
+          <option value="pending">보류</option>
+        </select>
+      </div>
+    </div>
+    <div class="content" id="write-mode-content">
+      <div class="input-container">
+        <input list="report-titles" id="select-title" placeholder="제목을 입력하세요." autocomplete="off"/>
+        <datalist id="report-titles"></datalist>
+        <textarea id="write-report" placeholder="내용을 작성하세요."></textarea>
+        <button id="save-button" class="save-btn" title="저장">💾<br>&nbsp;<br>저<br>&nbsp;<br>장</button>
+      </div>
+      <div id="item-list"></div>
+    </div>
+  </div>
+  <!-- view-mode -->
+  <div id="view-mode" class="tab-content">
+    <div class="mini-top-bar">
+      <div class="buttons">
+        <button id="showDateTime" class="right-btn" title="일시를 보이거나 숨깁니다.">일시 보이기</button>
+        <button id="copyToClipboard" class="right-btn" title="클립보드로 복사합니다.">복사</button>
+        <button id="removeData" class="right-btn" title="구분/카테고리를 제외한 모든 데이터를 삭제합니다.">작업 내용 삭제</button>
+      </div>
+    </div>
+    <div class="content" id="view-mode-content">
+      <p>작성된 내용을 섹션과 카테고리별로 출력합니다.</p>
+    </div>
+  </div>
+  <!-- settings-mode -->
+  <div id="settings-mode" class="tab-content">
+    <div class="content" id="settings-mode-content">
+      <h2>설정</h2>
+      <p>애플리케이션 설정을 변경할 수 있습니다.</p>
+    </div>
+  </div>
+  <script src="./lib/sortable.min.js"></script>
+  <script src="./main.js"></script>
+</body>
+</html>

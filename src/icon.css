@@ -1,0 +1,35 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 32px;
+    height: 96px;
+    background: transparent;
+    overflow: visible;
+}
+.icon {
+    width: 32px;
+    height: 32px;
+    /*box-shadow: 0 2px 6px rgba(0,0,0,0.25);*/
+    user-select: none;
+    -webkit-app-region: no-drag;
+}
+.icon#weport {
+    cursor: move;
+    background: url('./assets/app.png') center/cover no-repeat;
+}
+.icon#open-weport {
+    cursor: pointer;
+    background: url('./assets/write.png') center/cover no-repeat;
+}
+.icon#settings {
+    cursor: pointer;
+    background: url('./assets/settings.png') center/cover no-repeat;
+}
+.icon#close-weport {
+    cursor: pointer;
+    background: url('./assets/close.png') center/cover no-repeat;
+}
+
+/* 드래그 영역을 아이콘 전체로 처리하고 싶다면 아래 주석 해제:
+#icon { -webkit-app-region: drag; cursor: move; }
+*/
