@@ -1,0 +1,15 @@
+# node_modules 디렉토리 제외 (외부 라이브러리)
+node_modules/* linguist-vendored
+
+# 빌드된 JS 파일 제외
+dist/* linguist-generated
+
+# 특정 디렉토리의 JS 파일 제외
+frontend/**/*.js linguist-vendored
+
+# CSS/HTML도 제외 가능
+*.css linguist-vendored
+*.html linguist-vendored
+
+# Rust 파일을 강제로 Rust로 인식시키기
+*.rs linguist-language=Rust
