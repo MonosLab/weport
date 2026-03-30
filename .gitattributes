@@ -5,7 +5,7 @@ node_modules/* linguist-vendored
 dist/* linguist-generated
 
 # 특정 디렉토리의 JS 파일 제외
-frontend/**/*.js linguist-vendored
+*.js linguist-vendored
 
 # CSS/HTML도 제외 가능
 *.css linguist-vendored
