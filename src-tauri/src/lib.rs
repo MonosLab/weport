@@ -204,7 +204,7 @@ fn check_update() -> (bool, bool) {
     print_out!(">> Checking for updates...");
     unsafe {
       // Use absolute path for DLL
-      let dll_path = format!("{}/src/update/aurora4m_lib.dll", current_dir().unwrap().display());
+      let dll_path = format!("{}/aurora4m_lib.dll", current_dir().unwrap().display());
       print_out!(">> DLL path: {}", dll_path);
       
       let lib = match Library::new(&dll_path) {
