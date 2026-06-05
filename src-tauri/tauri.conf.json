@@ -29,13 +29,32 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": ["msi", "nsis"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/weport.ico"
-    ]
+    ],
+    "windows": {
+      "wix": {
+        "language": ["ko-KR"],
+        "template": "main.wxs"
+      },
+      "nsis": {
+        "installMode": "perMachine",
+        "displayLanguageSelector": true,
+        "installerIcon": "weport.ico",
+        "startMenuFolder": "Monoslab",
+        "template": "main.nsi"
+        
+      },
+      "certificateThumbprint": "E0742EEA0F8498394931BD3128B5EFADEDB5B743",
+      "digestAlgorithm": "sha256",
+      "timestampUrl": "http://timestamp.digicert.com"
+    },
+    "publisher": "Monoslab",
+    "copyright": "ⓒ 2026 Monoslab. All rights reserved."
   }
 }

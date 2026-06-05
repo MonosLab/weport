@@ -1,4 +1,5 @@
 <a href="DEVELOPMENT_GUIDE_EN.md" style="text-decoration:none; border:1px solid #ccc; padding:4px 8px; border-radius:4px;">English</a>
+
 # WEPORT 개발 가이드
 
 ## 📋 개요
@@ -8,6 +9,7 @@ WEPORT(Weekly Report)는 주간 보고서 작성 및 관리를 위한 Tauri 기�
 ## 🏗️ 아키텍처
 
 ### 기술 스택
+
 - **백엔드**: Rust 1.94.0 (Edition 2024)
 - **프론트엔드**: HTML5, CSS3, Vanilla JavaScript
 - **Framework**: Tauri v2.10.3
@@ -15,7 +17,8 @@ WEPORT(Weekly Report)는 주간 보고서 작성 및 관리를 위한 Tauri 기�
 - **의존성 관리**: pnpm
 
 ### 프로젝트 구조
-```
+
+```text
 📦weport
 ├──📂src                         # 프론트엔드 소스
 │   ├──📄main.js                 # 메인 애플리케이션 로직
@@ -47,12 +50,14 @@ WEPORT(Weekly Report)는 주간 보고서 작성 및 관리를 위한 Tauri 기�
 ## 🔧 개발 환경 설정
 
 ### 필수 요구사항
+
 - **Rust**: v1.94.0 이상
 - **Node.js**: v16 이상
 - **pnpm**: 패키지 관리자
 - **Tauri CLI**: v2.10.1
 
 ### 설치 및 설정
+
 ```bash
 # 1. Rust 설치 (rustup 사용)
 rustup install 1.94.0
@@ -69,6 +74,7 @@ cargo tauri dev
 ```
 
 ### 빌드 및 배포
+
 ```bash
 # 개발용 빌드
 cargo tauri build --debug
@@ -87,12 +93,14 @@ cargo tauri build --force
 WEPORT는 두 개의 창으로 구성됩니다:
 
 #### 메인 창 (`src/index.html`)
+
 - **용도**: 주요 사용자 인터페이스
 - **크기**: 800×600 (최소 600×200)
 - **특징**: 리사이징 가능, 프레임 없음
 - **모드**: 관리, 작성, 보기, 설정 탭
 
 #### 아이콘 창 (`src/icon.html`)
+
 - **용도**: 바탕화면 트레이 아이콘 역할
 - **크기**: 32×96 픽셀
 - **특징**: 투명 배경, 드래그 가능
@@ -101,10 +109,12 @@ WEPORT는 두 개의 창으로 구성됩니다:
 ### 2. Rust 백엔드 모듈
 
 #### Commands (`src-tauri/src/commands/`)
+
 Tauri 백엔드와 프론트엔드 간 통신을 담당:
 
 **`win_manager.rs`**
 WEPORT의 윈도우를 관리 합니다.
+
 ```rust
 #[command]
 pub fn show_main(app: AppHandle, show: bool) -> Result<(), String>
@@ -116,6 +126,7 @@ pub fn move_main_window(app: AppHandle, x: i32, y: i32) -> Result<(), String>
 
 **`data_manager.rs`**
 WEPORT의 설정 및 데이터를 관리합니다.
+
 ```rust
 #[command]
 pub fn read_config() -> Result<String, String>
@@ -126,24 +137,29 @@ pub fn get_uuid() -> String
 ```
 
 #### Modules (`src-tauri/src/module/`)
+
 핵심 유틸리티 기능:
 
 **`registry.rs`**
+
 - Windows 레지스트리 관리
 - 설정 불러오기/저장
 
 **`debug.rs`**
+
 - Windows OutputDebugString API 래핑
 - 매크로 기반 로깅
 
 ### 3. 데이터 관리 시스템
 
 #### 설정 파일
+
 - **`weport.json`**: 애플리케이션 설정
 - **`wp_manager.json`**: 주 데이터 관리
 - **`{uuid}.dat`**: 개별 보고서 데이터
 
 #### 데이터 구조
+
 ```javascript
 // wp_manager.json 구조
 {
@@ -245,27 +261,33 @@ function showScreen(screenId, buttonElement) {
 ### 일반적인 문제들
 
 #### 1. `window.__TAURI__` 정의되지 않음
+
 **원인**: 빌드 과정에서 Tauri 컨텍스트가 주입되지 않음
-**해결**: 
+**해결**: 강제 옵션(--force)을 주어 빌드
+
 ```bash
 cargo tauri build --force
 ```
 
 #### 2. 실행 파일 아이콘 미적용
+
 **원인**: 아이콘 리소스가 제대로 빌드되지 않음
 **해결**: 프로젝트 루트에서 직접 빌드
+
 ```bash
 cd /path/to/weport
 cargo tauri build
 ```
 
 #### 3. 레지스트리 접근 오류
+
 **원인**: 권한 부족 또는 키 경로 오류
 **해결**: 관리자 권한으로 실행 또는 키 경로 확인
 
 ### 디버깅 도구
 
 #### 1. Rust 디버그 출력
+
 ```rust
 use crate::print_out;
 
@@ -273,6 +295,7 @@ print_out!("Debug message: {}", value);
 ```
 
 #### 2. JavaScript 디버깅
+
 ```javascript
 // 브라우저 개발자 도구 사용
 console.log('Debug info:', data);
@@ -281,6 +304,7 @@ console.log('Debug info:', data);
 ```
 
 #### 3. 빌드 로그 확인
+
 ```bash
 # 상세 빌드 로그
 cargo tauri build --verbose
@@ -292,6 +316,7 @@ RUST_LOG=debug cargo tauri dev
 ## 📊 성능 최적화
 
 ### 1. Rust 최적화
+
 ```toml
 # Cargo.toml
 [profile.release]
@@ -302,6 +327,7 @@ panic = 'abort'
 ```
 
 ### 2. 번들 크기 최적화
+
 - 불필요한 의존성 제거
 - 에셋 압축 및 최적화
 - Tree shaking 적용
@@ -309,6 +335,7 @@ panic = 'abort'
 ## 🔒 보안 고려사항
 
 ### 1. CSP (Content Security Policy)
+
 ```json
 // tauri.conf.json
 "security": {
@@ -317,11 +344,13 @@ panic = 'abort'
 ```
 
 ### 2. 파일 시스템 접근
+
 - 필요한 경로만 허용
 - 사용자 입력 검증
 - 경로 탐색 공격 방지
 
 ### 3. 레지스트리 접근
+
 - 최소 권한 원칙
 - 안전한 키 경로 사용
 - 에러 처리 강화
@@ -329,7 +358,8 @@ panic = 'abort'
 ## 🚀 배포 가이드
 
 ### 1. 배포 파일 구조
-```
+
+```text
 weport-release/
 ├── weport.exe          # 메인 실행파일
 ├── weport.json         # 설정 파일
@@ -340,6 +370,7 @@ weport-release/
 ```
 
 ### 2. 인스톨러 생성
+
 ```bash
 # Windows MSI 인스톨러
 cargo tauri build --target x86_64-pc-windows-msvc
@@ -349,23 +380,27 @@ cargo tauri build --bundles nsis
 ```
 
 ### 3. 자동 업데이트
+
 Tauri 2.x의 업데이트 시스템을 활용하여 자동 업데이트 구현 가능
 
 ## 📝 코딩 컨벤션
 
 ### Rust 코딩 스타일
+
 - `rustfmt` 사용
 - `clippy` 린터 준수
 - 모든 공개 함수에 문서 주석
 - 에러 처리에 `Result` 타입 사용
 
 ### JavaScript 코딩 스타일
+
 - ES6+ 문법 사용
 - 함수명은 camelCase
 - 상수는 UPPER_CASE
 - async/await 선호
 
 ### 파일 구조 규칙
+
 - 모듈별 파일 분리
 - 기능별 디렉토리 구성
 - 명확한 네이밍 컨벤션
@@ -373,6 +408,7 @@ Tauri 2.x의 업데이트 시스템을 활용하여 자동 업데이트 구현 �
 ## 🧪 테스트 전략
 
 ### 1. 단위 테스트
+
 ```rust
 #[cfg(test)]
 mod tests {
@@ -386,6 +422,7 @@ mod tests {
 ```
 
 ### 2. 수동 테스트 체크리스트
+
 - [ ] 창 표시/숨김 기능
 - [ ] 데이터 저장/로드
 - [ ] 레지스트리 읽기/쓰기

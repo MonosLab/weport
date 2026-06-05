@@ -1,6 +1,6 @@
 [package]
 name = "weport"
-version = "0.1.0"
+version = "1.0.0"
 description = "Weekly report application built with Tauri."
 authors = ["Kwangsoo Seo", "monoslab <chps74@naver.com>"]
 edition = "2024"

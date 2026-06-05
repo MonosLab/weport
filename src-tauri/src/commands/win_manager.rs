@@ -1,4 +1,4 @@
-use crate::print_out;
+use crate::{print_out, eprint_out};
 use common::define;
 use crate::module::registry::{
     self,
@@ -252,3 +252,58 @@ pub fn refresh_window(app: AppHandle)  -> Result<(), String>{
     });
     Ok(())
   }
+
+#[tauri::command]
+pub fn is_startup() -> bool {
+  let _= registry::open(HKEY_CURRENT_USER, define::REG_KEY_RUN);
+  let app_path = registry::read_string(define::APP_NAME);
+  match app_path {
+      Ok(path) => {
+          if path.is_empty() {
+              return false;
+          }
+          print_out!(">> [Auto-run] Path: {}", path);
+      }
+      Err(e) => {
+        eprint_out!(">> [Auto-run] Error : {}", e);
+        return false;
+      }
+  }
+  true
+}
+
+#[tauri::command]
+pub fn update_startup(is_startup: bool)  -> Result<String, String> {
+    // Enable or disable auto-run on system startup
+    let _ = registry::open(HKEY_CURRENT_USER, define::REG_KEY_RUN);
+    if is_startup {
+        // print_out!("Auto-run enabled");
+        match std::env::current_exe() {
+            Ok(exe_path) => {
+                let exe_path_str = exe_path.to_str().unwrap_or("");
+                let reg_path = format!("\"{}\"", exe_path_str);
+                print_out!(">> [Auto-run] Enabled : {}", exe_path_str);
+                registry::write_string(define::APP_NAME, reg_path.as_str()).unwrap_or_else(|e| {
+                    print_out!(">> [Auto-run] Error : {}", e);
+                });
+            }
+            Err(e) => {
+                eprint_out!(">> [Auto-run] Error : {}", e);
+            }
+        }
+    } else {
+        // Remove the auto-run setting
+        // print_out!("Auto-run disabled");
+        let result = registry::delete_subkey(define::APP_NAME);
+        match result {
+            Ok(_) => {
+                print_out!(">> [Auto-run] Remove key({})", define::APP_NAME);
+            },
+            Err(_) => {
+                eprint_out!(">> [Auto-run] Failed to remove key({})", define::APP_NAME);
+            },
+        }
+    }
+
+    Ok("Auto-run setting changed".into())
+}

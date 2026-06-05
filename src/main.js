@@ -1303,8 +1303,16 @@ class SettingsMode {
         nameFormRow.appendChild(nameLabel);
         nameFormRow.appendChild(nameInput);
         settingsContainer.appendChild(nameFormRow);
+        // hr 요소 생성
+        const hr = DOMUtils.createElement('hr');
+        // 스타일 지정
+        hr.style.border = 'none';          // 기본 border 제거
+        hr.style.borderTop = '1px solid #ccc'; // 연한 그레이(#ccc) 선 추가
+        hr.style.margin = '10px 0';        // 위아래 여백
+        settingsContainer.appendChild(hr);
         // Checkbox for Auto update with label
         const autoUpdateRow = DOMUtils.createElement('div', 'settings-form-row2');
+        const useStartupRow = DOMUtils.createElement('div', 'settings-form-row2');
         const useUpdateLabel = DOMUtils.createElement('label', null, '업데이트 사용');
         const useUpdateCheckbox = DOMUtils.createElement('input');
         useUpdateCheckbox.type = 'checkbox';
@@ -1328,7 +1336,18 @@ class SettingsMode {
         autoUpdateLabel.htmlFor = 'autoUpdateCheckbox';
         autoUpdateRow.appendChild(autoUpdateLabel);
         settingsContainer.appendChild(autoUpdateRow);
-
+        // Check if a program runs automatically at Windows startup 
+        const isStartup = await invoke('is_startup');
+        const useStartupCheckbox = DOMUtils.createElement('input');
+        useStartupCheckbox.type = 'checkbox';
+        useStartupCheckbox.id = 'useStartupCheckbox';
+        useStartupCheckbox.checked = isStartup;
+        useStartupRow.appendChild(useStartupCheckbox);
+        // When the useStartup option is enabled, weport launches automatically at Windows startup.
+        const useStartupLabel = DOMUtils.createElement('label', null, '윈도우 시작시 자동 실행');
+        useStartupLabel.htmlFor = 'useStartupCheckbox';
+        useStartupRow.appendChild(useStartupLabel);
+        settingsContainer.appendChild(useStartupRow);
         // Save button (placed separately outside the container for better layout)
         const buttonRow = DOMUtils.createElement('div', 'settings-button-row');
         const saveButton = DOMUtils.createElement('button', 'settings-save-btn', '저장');
@@ -1340,6 +1359,14 @@ class SettingsMode {
                 await customAlert('이름을 입력해주세요.');
                 return;
             }
+            const useStartup = useStartupCheckbox.checked;
+            try {
+                await invoke('update_startup', { isStartup: useStartup });
+                console.log("Config saved successfully");
+            } catch (error) {
+                console.error("Error saving config:", error);
+            }
+            SetStartup(useStartup);
             const useUpdate = useUpdateCheckbox.checked;
             AppConfig.useUpdate = useUpdate;
             const autoUpdate = autoUpdateCheckbox.checked;

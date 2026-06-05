@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="Weport" Language="1042" Version="1.0.0.0" Manufacturer="Monoslab" UpgradeCode="7a1e2595-50e9-4128-bc77-442d567699ed">
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
+    <Media Id="1" Cabinet="weport.cab" EmbedCab="yes"/>
+    <!-- INSTALLDIR 기본값을 C:\Weport로 지정 -->
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+    <!-- main.wxs(13) : warning LGHT1076 : ICE48: Directory 'INSTALLDIR' appears to be hardcoded in the property table to a local drive.-->
+    <Property Id="INSTALLDIR" Value="C:\Weport" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch Weport after installation" />
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="INSTALLDIR" Name="Weport">
+        <!-- 메인 앱 -->
+        <Component Id="MainApp" Guid="05699900-B40A-4434-B8B4-C7E5F915AD06">
+          <File Id="WeportAppExe" Source="..\..\..\..\target\release\weport.exe" KeyPath="yes"/>
+          <File Id="WeportAppJson" Source="..\..\..\..\target\release\weport.json" KeyPath="no"/>
+        </Component>
+        <!-- 외부 프로그램 -->
+        <Component Id="UpdateApp" Guid="F3D41931-77BB-4D85-9B06-689AF8E9D035">
+          <File Id="UpdateExe" Source="..\..\..\..\bin\aurora4m.exe" KeyPath="no"/>
+          <File Id="UpdateLib" Source="..\..\..\..\bin\aurora4m_lib.dll" KeyPath="no"/>
+          <File Id="UpdateCfg" Source="..\..\..\..\bin\aurora4m.cfg" KeyPath="no"/>
+          <File Id="UpdateVer" Source="..\..\..\..\bin\ver.dat" KeyPath="no"/>
+        </Component>
+        <!-- 빈 폴더 생성 -->
+        <Directory Id="EmptyDataDir" Name="data">
+          <Component Id="EmptyDataComponent" Guid="*">
+            <CreateFolder/>
+            <!--RemoveFolder Id="RemoveEmptyDataDir" On="uninstall"/--> <!-- 폴더가 비어 있을 때만 삭제 -->
+            <RemoveFile Id="RemoveDataFiles" Name="*.*" On="uninstall"/>
+            <RemoveFolder Id="RemoveDataDir" On="uninstall"/>
+            <!--RemoveFolderEx Id="RemoveDataDir" On="uninstall" Property="EmptyDataDir"/--> <!-- 폴더가 비어 있지 않아도 강제로 삭제 -->
+            <RegistryValue Root="HKCU" Key="Software\Monoslab\weport" Name="EmptyDataDir" Value="[EmptyDataDir]" Type="string" KeyPath="yes"/>
+          </Component>
+        </Directory>
+      </Directory>
+      <!-- 단축아이콘은 반드시 Directory 안에 있어야 함 -->
+      <Directory Id="DesktopFolder" Name="Desktop"/>
+      <Directory Id="ProgramMenuFolder" Name="Programs"/>
+    </Directory>
+
+    <!-- 아이콘 등록 -->
+    <Icon Id="WeportIcon" SourceFile="..\..\..\..\weport.ico"/>
+
+    <!-- 단축아이콘 -->
+    <Component Id="AppShortcut" Guid="EF26D7E4-E395-4CBD-BA37-D3D8D08C12C5" Directory="INSTALLDIR">
+      <Shortcut Id="DesktopShortcut"
+                Directory="DesktopFolder"
+                Name="Weport"
+                WorkingDirectory="INSTALLDIR"
+                Icon="WeportIcon"
+                Target="[INSTALLDIR]weport.exe"/>
+      <Shortcut Id="StartMenuShortcut"
+                Directory="ProgramMenuFolder"
+                Name="Weport"
+                WorkingDirectory="INSTALLDIR"
+                Icon="WeportIcon"
+                Target="[INSTALLDIR]weport.exe"/>
+      <!-- KeyPath로 사용할 레지스트리 값 추가 -->
+      <RegistryValue Root="HKCU" Key="Software\Monoslab\weport" Name="Shortcut" Value="1" Type="integer" KeyPath="yes"/>
+    </Component>
+
+    <!-- 레지스트리 등록 -->
+    <Component Id="RegistryEntries" Guid="*" Directory="INSTALLDIR">
+      <RegistryKey Root="HKCU" Key="Software\Monoslab\weport">
+        <RegistryValue Type="string" Name="InstallPath" Value="[INSTALLDIR]" KeyPath="yes"/>
+        <RegistryValue Type="string" Name="ExternalToolPath" Value="[INSTALLDIR]weport.exe"/>
+        <RegistryValue Type="integer" Name="Version" Value="1"/>
+      </RegistryKey>
+    </Component>
+
+    <!-- Feature 정의 -->
+    <Feature Id="Complete" Title="WeportApp" Level="1">
+      <ComponentRef Id="MainApp"/>
+      <ComponentRef Id="UpdateApp"/>
+      <ComponentRef Id="EmptyDataComponent"/>
+      <ComponentRef Id="AppShortcut"/>
+      <ComponentRef Id="RegistryEntries"/>
+    </Feature>
+
+    <!-- UI 정의 -->
+    <UIRef Id="WixUI_InstallDir" />
+
+    <!-- 라이선스 파일 연결 -->
+    <WixVariable Id="WixUILicenseRtf" Value="..\..\..\..\license.rtf" />
+
+    <!-- 설치 후 자동 실행 -->
+    <CustomAction Id="LaunchApp"
+                  FileKey="WeportAppExe"
+                  ExeCommand=""
+                  Return="asyncNoWait"/>
+    <!--InstallExecuteSequence>
+      <Custom Action="LaunchApp" After="InstallFinalize">NOT Installed</Custom>
+    </InstallExecuteSequence-->
+    <UI>
+      <Publish Dialog="ExitDialog" 
+              Control="Finish" 
+              Event="DoAction" 
+              Value="LaunchApp">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1</Publish>
+    </UI>
+  </Product>
+</Wix>

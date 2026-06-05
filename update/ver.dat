@@ -1,0 +1,19 @@
+{
+  "files": [
+    {
+      "name": "weport.exe",
+      "dir": "",
+      "ver": 1
+    },
+	{
+      "name": "aurora4m.exe",
+      "dir": "",
+      "ver": 1
+    },
+    {
+      "name": "aurora4m_lib.dll",
+      "dir": "",
+      "ver": 1
+    }
+  ]
+}

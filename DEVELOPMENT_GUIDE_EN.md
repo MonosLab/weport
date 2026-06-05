@@ -1,4 +1,5 @@
 <a href="DEVELOPMENT_GUIDE_KO.md" style="text-decoration:none; border:1px solid #ccc; padding:4px 8px; border-radius:4px;">한국어</a>
+
 # WEPORT Development Guide
 
 ## Overview
@@ -8,6 +9,7 @@ WEPORT (Weekly Report) is a Tauri-based desktop application for creating and man
 ## Architecture
 
 ### Tech Stack
+
 - **Backend**: Rust 1.94.0 (Edition 2024)
 - **Frontend**: HTML5, CSS3, Vanilla JavaScript
 - **Framework**: Tauri v2.10.3
@@ -15,7 +17,8 @@ WEPORT (Weekly Report) is a Tauri-based desktop application for creating and man
 - **Dependency Management**: pnpm
 
 ### Project Structure
-```
+
+```text
 📦weport
 ├──📂src                         # Frontend source
 │   ├──📄main.js                 # Main application logic
@@ -47,12 +50,14 @@ WEPORT (Weekly Report) is a Tauri-based desktop application for creating and man
 ## Development Environment Setup
 
 ### Prerequisites
+
 - **Rust**: v1.94.0 or later
 - **Node.js**: v16 or later
 - **pnpm**: Package manager
 - **Tauri CLI**: v2.10.1
 
 ### Installation and Setup
+
 ```bash
 # 1. Install Rust (using rustup)
 rustup install 1.94.0
@@ -69,6 +74,7 @@ cargo tauri dev
 ```
 
 ### Build and Deployment
+
 ```bash
 # Debug build
 cargo tauri build --debug
@@ -87,12 +93,14 @@ cargo tauri build --force
 WEPORT consists of two windows:
 
 #### Main Window (`src/index.html`)
+
 - **Purpose**: Main user interface
 - **Size**: 800x600 (minimum 600x200)
 - **Features**: Resizable, frameless
 - **Modes**: Management, Write, View, Settings tabs
 
 #### Icon Window (`src/icon.html`)
+
 - **Purpose**: Desktop tray icon-like window
 - **Size**: 32x96 pixels
 - **Features**: Transparent background, draggable
@@ -101,10 +109,12 @@ WEPORT consists of two windows:
 ### 2. Rust Backend Modules
 
 #### Commands (`src-tauri/src/commands/`)
+
 Handles communication between the Tauri backend and frontend:
 
 **`win_manager.rs`**
 Manages WEPORT windows.
+
 ```rust
 #[command]
 pub fn show_main(app: AppHandle, show: bool) -> Result<(), String>
@@ -116,6 +126,7 @@ pub fn move_main_window(app: AppHandle, x: i32, y: i32) -> Result<(), String>
 
 **`data_manager.rs`**
 Manages WEPORT settings and data.
+
 ```rust
 #[command]
 pub fn read_config() -> Result<String, String>
@@ -126,24 +137,29 @@ pub fn get_uuid() -> String
 ```
 
 #### Modules (`src-tauri/src/module/`)
+
 Core utility functionality:
 
 **`registry.rs`**
+
 - Windows registry management
 - Load/save settings
 
 **`debug.rs`**
+
 - Windows OutputDebugString API wrapper
 - Macro-based logging
 
 ### 3. Data Management System
 
 #### Configuration Files
+
 - **`weport.json`**: Application configuration
 - **`wp_manager.json`**: Main data management
 - **`{uuid}.dat`**: Individual report data
 
 #### Data Structure
+
 ```javascript
 // wp_manager.json structure
 {
@@ -245,27 +261,33 @@ function showScreen(screenId, buttonElement) {
 ### Common Issues
 
 #### 1. `window.__TAURI__` is undefined
+
 **Cause**: Tauri context was not injected during build
 **Solution**:
+
 ```bash
 cargo tauri build --force
 ```
 
 #### 2. Executable icon is not applied
+
 **Cause**: Icon resources were not properly bundled
 **Solution**: Build directly from the project root
+
 ```bash
 cd /path/to/weport
 cargo tauri build
 ```
 
 #### 3. Registry access error
+
 **Cause**: Insufficient permissions or incorrect key path
 **Solution**: Run as administrator or verify key path
 
 ### Debugging Tools
 
 #### 1. Rust debug output
+
 ```rust
 use crate::print_out;
 
@@ -273,6 +295,7 @@ print_out!("Debug message: {}", value);
 ```
 
 #### 2. JavaScript debugging
+
 ```javascript
 // Use browser developer tools
 console.log('Debug info:', data);
@@ -281,6 +304,7 @@ console.log('Debug info:', data);
 ```
 
 #### 3. Check build logs
+
 ```bash
 # Detailed build logs
 cargo tauri build --verbose
@@ -292,6 +316,7 @@ RUST_LOG=debug cargo tauri dev
 ## Performance Optimization
 
 ### 1. Rust optimization
+
 ```toml
 # Cargo.toml
 [profile.release]
@@ -302,6 +327,7 @@ panic = 'abort'
 ```
 
 ### 2. Bundle size optimization
+
 - Remove unnecessary dependencies
 - Compress and optimize assets
 - Apply tree shaking
@@ -309,6 +335,7 @@ panic = 'abort'
 ## Security Considerations
 
 ### 1. CSP (Content Security Policy)
+
 ```json
 // tauri.conf.json
 "security": {
@@ -317,11 +344,13 @@ panic = 'abort'
 ```
 
 ### 2. File system access
+
 - Allow only required paths
 - Validate user input
 - Prevent path traversal attacks
 
 ### 3. Registry access
+
 - Follow the principle of least privilege
 - Use safe key paths
 - Strengthen error handling
@@ -329,7 +358,8 @@ panic = 'abort'
 ## Deployment Guide
 
 ### 1. Distribution file structure
-```
+
+```text
 weport-release/
 ├── weport.exe          # Main executable
 ├── weport.json         # Configuration file
@@ -340,6 +370,7 @@ weport-release/
 ```
 
 ### 2. Create installer
+
 ```bash
 # Windows MSI installer
 cargo tauri build --target x86_64-pc-windows-msvc
@@ -349,23 +380,27 @@ cargo tauri build --bundles nsis
 ```
 
 ### 3. Automatic updates
+
 Automatic updates can be implemented using Tauri 2.x update system.
 
 ## Coding Conventions
 
 ### Rust coding style
+
 - Use `rustfmt`
 - Follow `clippy` lint rules
 - Add doc comments for all public functions
 - Use `Result` type for error handling
 
 ### JavaScript coding style
+
 - Use ES6+ syntax
 - Use camelCase for function names
 - Use UPPER_CASE for constants
 - Prefer async/await
 
 ### File structure rules
+
 - Separate files by module
 - Organize directories by feature
 - Use clear naming conventions
@@ -373,6 +408,7 @@ Automatic updates can be implemented using Tauri 2.x update system.
 ## Test Strategy
 
 ### 1. Unit tests
+
 ```rust
 #[cfg(test)]
 mod tests {
@@ -386,6 +422,7 @@ mod tests {
 ```
 
 ### 2. Manual test checklist
+
 - [ ] Window show/hide functionality
 - [ ] Data save/load
 - [ ] Registry read/write

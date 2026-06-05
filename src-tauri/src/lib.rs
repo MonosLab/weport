@@ -17,7 +17,9 @@ use commands::win_manager::{
   set_window_menu_pos,
   set_window_size,
   move_main_window,
-  refresh_window
+  refresh_window,
+  is_startup,
+  update_startup
 };
 use commands::data_manager::{
   get_uuid,
@@ -168,7 +170,9 @@ pub fn run() {
       save_data,
       read_detail_data,
       save_detail_data,
-      delete_detail_data
+      delete_detail_data,
+      is_startup,
+      update_startup
       ])
     .plugin(tauri_plugin_positioner::init())
     .run(tauri::generate_context!())
@@ -187,6 +191,7 @@ fn check_directory() {
 }
 
 /// Check for updates and return whether updates are available and whether auto-update is enabled
+/// (bool, bool) : (useUpdate, autoUpdate)
 fn check_update() -> (bool, bool) {
   let config = read_config().unwrap();
   let v: Value = serde_json::from_str(&config).unwrap();
