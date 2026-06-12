@@ -1,7 +1,7 @@
 {
   "$schema": "./config/v2.json",
   "productName": "weport",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "identifier": "monoslab.weport.app",
   "build": {
     "frontendDist": "../src"

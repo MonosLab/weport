@@ -19,6 +19,11 @@ pub const WEPORT_CLASS_NAME: &str = "Weport@1";
 
 // file
 pub const DATA_DIR_NAME: &str = "data";
+pub const APP_EXE_FILE_NAME: &str = "Weport.exe";
+pub const UPDATE_EXE_FILE_NAME: &str = "aurora4m.exe";
+pub const NEWUPDATE_EXE_FILE_NAME: &str = "newaurora4m.exe";
+pub const UPDATE_CFG_FILE_NAME: &str = "aurora4m.cfg";
+pub const UPDATE_LIB_FILE_NAME: &str = "aurora4m_lib.dll";
 pub const CONFIG_FILE_NAME: &str = "weport.json";
 pub const MANAGE_FILE_NAME: &str = "wp_manager.json";
 

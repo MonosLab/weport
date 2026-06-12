@@ -1,7 +1,7 @@
 !include MUI2.nsh
 
 !define PRODUCTNAME "Weport"
-!define VERSION "1.0.0"
+!define VERSION "1.0.1"
 
 Name "Weport"
 ; 설치 파일

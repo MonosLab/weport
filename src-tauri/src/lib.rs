@@ -35,12 +35,12 @@ use common::{
   self,
   define
 };
+use std::fs;
 use std::{
-  env::{
-    current_exe,
-    current_dir
-  },
+  //env::current_dir,
+  env::current_exe,
   path::Path,
+  process::Command,
   ffi::{
     CString,
     CStr,
@@ -77,14 +77,41 @@ pub static APP_HANDLE: OnceCell<AppHandle> = OnceCell::new();
 /// Initialize and run the Tauri application
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+  let _ = replace_update_file();
   let (update, autoupdate) = check_update();
   if update {
+    // 윈도우 시작 시 자동 실행(Registry Run key, 작업 스케줄러, 시작프로그램 폴더 등)으로 프로그램이 구동되면,
+    // 윈도우 시스템이 지정한 기본 작업 디렉터리가 현재 디렉터리(current_dir)로 설정됩니다.
+    // 보통은 C:\Windows\System32 또는 사용자의 홈 디렉터리(C:\Users\사용자명)가 기본값으로 잡히게 됩니다.
+    //let update_path = format!("{}\\{}", current_dir().unwrap().display(), define::UPDATE_EXE_FILE_NAME);
+    let update_path = format!("{}\\{}", current_exe().unwrap().parent().unwrap().display(), define::UPDATE_EXE_FILE_NAME);
     if autoupdate {
       print_out!(">> Auto-update enabled, starting update process...");
       // Implement auto-update logic here (e.g., download and install update, restart app, etc.) --- IGNORE ---
+      // aurora4m.exe --auto weport.exe
+      let exec_path = format!("{} --auto {}", update_path, define::APP_EXE_FILE_NAME);
+      match Command::new(&exec_path).spawn() {
+        Ok(_) => {
+            println!(">> Process started successfully.");
+            std::process::exit(0);
+        }
+        Err(e) => {
+            println!(">> Failed to start process: {}", e);
+        }
+      }
     } else {
       print_out!(">> Update available but auto-update is disabled. Please update manually.");
       // Optionally, you can implement logic to show an update notification or prompt the user to update.
+      // aurora4m.exe
+      match Command::new(&update_path).spawn() {
+        Ok(_) => {
+            println!(">> Process started successfully.");
+            std::process::exit(0);
+        }
+        Err(e) => {
+            println!(">> Failed to start process: {}", e);
+        }
+      }
     }
   } else {
     print_out!(">> No updates available.");
@@ -181,6 +208,7 @@ pub fn run() {
 
 /// If nessesary directories not exist, create them
 fn check_directory() {
+  //let root_path = format!("{}", current_dir().unwrap().display());
   let root_path = format!("{}", current_exe().unwrap().parent().unwrap().display());
   // Check data directory
   let data_dir_path = format!("{}\\{}", root_path, common::define::DATA_DIR_NAME);
@@ -188,6 +216,30 @@ fn check_directory() {
     print_out!(">> Data directory not found, creating: {}", data_dir_path);
     std::fs::create_dir(&data_dir_path).unwrap();
   }
+}
+
+fn replace_update_file() -> bool {
+  if let Ok(exe_path) = current_exe() {
+    if let Some(root_path) = exe_path.parent() {
+      let new_update_file = root_path.join(common::define::NEWUPDATE_EXE_FILE_NAME);
+      let old_update_file = root_path.join(common::define::UPDATE_EXE_FILE_NAME);
+
+      if new_update_file.exists() {
+        // Try removing the old update file.
+        if let Err(e) = fs::remove_file(&old_update_file) {
+            eprint_out!("Failed to remove old update file: {e}");
+            return false;
+        }
+        // Try to rename the new update file as the old update file.
+        if let Err(e) = fs::rename(&new_update_file, &old_update_file) {
+            eprint_out!("Failed to rename new update file: {e}");
+            return false;
+        }
+        print_out!("Update file replaced successfully.");
+      }
+    }
+  }
+  true
 }
 
 /// Check for updates and return whether updates are available and whether auto-update is enabled
@@ -204,7 +256,8 @@ fn check_update() -> (bool, bool) {
     print_out!(">> Checking for updates...");
     unsafe {
       // Use absolute path for DLL
-      let dll_path = format!("{}/aurora4m_lib.dll", current_dir().unwrap().display());
+      //let dll_path = format!("{}\\{}", current_dir().unwrap().display(), define::UPDATE_LIB_FILE_NAME);
+      let dll_path = format!("{}\\{}", current_exe().unwrap().parent().unwrap().display(), define::UPDATE_LIB_FILE_NAME);
       print_out!(">> DLL path: {}", dll_path);
       
       let lib = match Library::new(&dll_path) {
@@ -229,7 +282,8 @@ fn check_update() -> (bool, bool) {
           }
         }
       };
-      let file_path = format!("{}/aurora4m.cfg", current_dir().unwrap().display());
+      //let file_path = format!("{}\\{}", current_dir().unwrap().display(), define::UPDATE_CFG_FILE_NAME);
+      let file_path = format!("{}\\{}", current_exe().unwrap().parent().unwrap().display(), define::UPDATE_CFG_FILE_NAME);
       print_out!(">> Config file path: {}", file_path);
       if Path::new(&file_path).exists() {
         let c_file_path = CString::new(file_path).unwrap();
@@ -272,8 +326,9 @@ fn check_update() -> (bool, bool) {
         } else {
           format!("{}://{}{}{}", protocol, host, path, file)
         };
-        let data_path = format!("{}\\ver.dat", current_dir().unwrap().display());
-
+        
+        //let data_path = format!("{}\\ver.dat", current_dir().unwrap().display());
+        let data_path = format!("{}\\ver.dat", current_exe().unwrap().parent().unwrap().display());
         print_out!(">> Update URL: {}", update_url);
         print_out!(">> Data path: {}", data_path);
         

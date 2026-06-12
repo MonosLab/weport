@@ -1366,7 +1366,6 @@ class SettingsMode {
             } catch (error) {
                 console.error("Error saving config:", error);
             }
-            SetStartup(useStartup);
             const useUpdate = useUpdateCheckbox.checked;
             AppConfig.useUpdate = useUpdate;
             const autoUpdate = autoUpdateCheckbox.checked;

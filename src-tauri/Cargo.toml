@@ -1,6 +1,6 @@
 [package]
 name = "weport"
-version = "1.0.0"
+version = "1.0.1"
 description = "Weekly report application built with Tauri."
 authors = ["Kwangsoo Seo", "monoslab <chps74@naver.com>"]
 edition = "2024"
@@ -29,14 +29,14 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2.6.2", features = [] }
 
 [dependencies]
-tauri = { version = "2.11.2", features = [] }
+tauri = { version = "2.11.2", features = ["default", "devtools"] }
 tauri-cli = "2.11.2"
 tauri-plugin-opener = "2.5.4"
 tauri-plugin-positioner = "2.3.2"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.150"
 once_cell = "1.21.4"
-uuid = { version = "1.23.2", features = ["v4"] }
+uuid = { version = "1.23.3", features = ["v4"] }
 common = { version = "1.0.0", path = "src/common" }
 libloading = "0.9.0"
 
