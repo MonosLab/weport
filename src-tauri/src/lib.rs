@@ -40,7 +40,7 @@ use std::{
   //env::current_dir,
   env::current_exe,
   path::Path,
-  process::Command,
+  //process::Command,
   ffi::{
     CString,
     CStr,
@@ -53,6 +53,17 @@ use tauri::{
     WebviewUrl,
     WebviewWindowBuilder,
     window::Color
+};
+use windows::core::{
+  HSTRING,
+  w
+};
+use windows::Win32::{
+  UI::{
+    Shell::ShellExecuteW,
+    WindowsAndMessaging::SW_SHOWNORMAL
+  },
+  Foundation::HWND
 };
 use libloading::Library;
 use serde_json::Value;
@@ -85,6 +96,21 @@ pub fn run() {
     // 보통은 C:\Windows\System32 또는 사용자의 홈 디렉터리(C:\Users\사용자명)가 기본값으로 잡히게 됩니다.
     //let update_path = format!("{}\\{}", current_dir().unwrap().display(), define::UPDATE_EXE_FILE_NAME);
     let update_path = format!("{}\\{}", current_exe().unwrap().parent().unwrap().display(), define::UPDATE_EXE_FILE_NAME);
+    print_out!(">> Update path : {}", update_path);
+
+/*
+권한 상승이 필요하다...
+use std::ffi::CString;
+use windows_sys::Win32::UI::Shell::ShellExecuteA;
+
+unsafe {
+    let operation = CString::new("runas").unwrap();
+    let file = CString::new("C:\\path\\to\\your_app.exe").unwrap();
+    ShellExecuteA(0, operation.as_ptr(), file.as_ptr(), std::ptr::null(), std::ptr::null(), 1);
+}
+
+*/
+/*
     if autoupdate {
       print_out!(">> Auto-update enabled, starting update process...");
       // Implement auto-update logic here (e.g., download and install update, restart app, etc.) --- IGNORE ---
@@ -111,6 +137,36 @@ pub fn run() {
         Err(e) => {
             println!(">> Failed to start process: {}", e);
         }
+      }
+    }
+*/
+
+    if autoupdate {
+      let params = format!("--auto {}", define::APP_EXE_FILE_NAME);
+      unsafe {
+        let result = ShellExecuteW(
+          Some(HWND::default()),
+          w!("runas"),
+          &HSTRING::from(update_path),
+          &HSTRING::from(params),
+          w!(""),
+          SW_SHOWNORMAL);
+          if (result.0 as usize) <= 32 {
+            eprint_out!(">> Failed to start process: {:?}", result);
+          }
+      }
+    } else {
+      unsafe {
+        let result = ShellExecuteW(
+          Some(HWND::default()),
+          w!("runas"),
+          &HSTRING::from(update_path),
+          w!(""),
+          w!(""),
+          SW_SHOWNORMAL);
+          if (result.0 as usize) <= 32 {
+            eprint_out!(">> Failed to start process (No params): {:?}", result);
+          }
       }
     }
   } else {
@@ -347,14 +403,14 @@ fn check_update() -> (bool, bool) {
         };
         let c_update_url = CString::new(update_url).unwrap();
         let updates_available = check_updates(CString::new(data_path).unwrap().as_ptr(), c_update_url.as_ptr());
-        if updates_available != 0 {
+        if updates_available > 0 {
           if auto_update {
             return (true, true);
           } else {
             return (true, false);
           }
         } else {
-          print_out!(">> Config file not found, skipping update check");
+          print_out!(">> Config file not found, skipping update check ({})", updates_available);
         }
       }
     }
