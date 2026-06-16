@@ -169,6 +169,7 @@ unsafe {
           }
       }
     }
+    std::process::exit(0);
   } else {
     print_out!(">> No updates available.");
   }
