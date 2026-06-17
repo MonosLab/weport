@@ -55,6 +55,12 @@ li.li-content:hover, h4.h4-content:hover {
   font-size: inherit;
   color: inherit;
 }
+.subcontent-line2 {
+  margin-left: 32px; /* Equivalent to 16px spaces indentation */
+  margin-top: 2px;
+  font-size: inherit;
+  color: inherit;
+}
 dialog {
   border: none;
   border-radius: 8px;

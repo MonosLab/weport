@@ -1011,8 +1011,13 @@ class ViewMode {
                             const lines = li.dataset.subcontent.split('\n');
                             const subdetailItem = DOMUtils.createElement('li', 'li-content');
                             lines.forEach(line => {
-                                const lineItem = DOMUtils.createElement('div', 'subcontent-line', '● ' + line);
-                                subdetailItem.appendChild(lineItem);
+                                if (line.startsWith('-')) {
+                                    const lineItem = DOMUtils.createElement('div', 'subcontent-line2', line);
+                                    subdetailItem.appendChild(lineItem);
+                                } else {
+                                    const lineItem = DOMUtils.createElement('div', 'subcontent-line', '● ' + line);
+                                    subdetailItem.appendChild(lineItem);
+                                }
                             });
                             li.appendChild(subdetailItem);
                         } else {
@@ -1039,8 +1044,13 @@ class ViewMode {
                             const lines = li.dataset.subcontent.split('\n');
                             const subdetailItem = DOMUtils.createElement('li', 'li-content');
                             lines.forEach(line => {
-                                const lineItem = DOMUtils.createElement('div', 'subcontent-line', '● ' + line);
-                                subdetailItem.appendChild(lineItem);
+                                if (line.startsWith('-')) {
+                                    const lineItem = DOMUtils.createElement('div', 'subcontent-line2', line);
+                                    subdetailItem.appendChild(lineItem);
+                                } else {
+                                    const lineItem = DOMUtils.createElement('div', 'subcontent-line', '● ' + line);
+                                    subdetailItem.appendChild(lineItem);
+                                }
                             });
                             li.appendChild(subdetailItem);
                         } else {
@@ -1100,7 +1110,11 @@ class ViewMode {
                                             }
 
                                             lines.forEach(line => {
-                                                textToCopy += '      ● ' + line + '\n';
+                                                if (line.startsWith('-')) {
+                                                    textToCopy += '        ' + line + '\n';
+                                                } else {
+                                                    textToCopy += '      ● ' + line + '\n';
+                                                }
                                             });
                                             return;
                                         } else if (detailLi.dataset.subcontent.trim() !== '') {
@@ -1215,8 +1229,13 @@ class ViewMode {
                   if (subcontentText.includes('\n')) {
                     const lines = subcontentText.split('\n');
                     lines.forEach(line => {
-                      const lineItem = DOMUtils.createElement('div', 'subcontent-line', '● ' + line);
-                      subdetailItem.appendChild(lineItem);
+                        if (line.startsWith('-')) {
+                            const lineItem = DOMUtils.createElement('div', 'subcontent-line2', line);
+                            subdetailItem.appendChild(lineItem);
+                        } else {
+                            const lineItem = DOMUtils.createElement('div', 'subcontent-line', '● ' + line);
+                            subdetailItem.appendChild(lineItem);
+                        }
                     });
                   } else if (subcontentText) {
                     const lineItem = DOMUtils.createElement('div', 'subcontent-line', '● ' + subcontentText);
@@ -1485,7 +1504,7 @@ function initializeApp() {
                         listItem.appendChild(subItem);
                     }
                 });
-                
+
                 listItemContainer.appendChild(listItemHeader);
                 listItemContainer.appendChild(listItem);
                 itemList.appendChild(listItemContainer);
