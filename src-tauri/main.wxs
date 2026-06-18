@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="Weport" Language="1042" Version="1.0.0.0" Manufacturer="Monoslab" UpgradeCode="7a1e2595-50e9-4128-bc77-442d567699ed">
+  <Product Id="*" Name="Weport" Language="1042" Version="1.0.1.0" Manufacturer="Monoslab" UpgradeCode="7a1e2595-50e9-4128-bc77-442d567699ed">
     <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
     <Media Id="1" Cabinet="weport.cab" EmbedCab="yes"/>
     <!-- INSTALLDIR 기본값을 C:\Weport로 지정 -->

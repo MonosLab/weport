@@ -12,20 +12,24 @@ You need to install the required modules once by running 'pnpm install' in the p
 
 ### Distribution Folder Structure   
 📂root   
+ ├─📂backups
  ├─📂data   
- |  ├─📄wp_manager.json   
- |  ├─📄5497d3bd-c006-4ff2-948a-ad4e40aaa7d9.dat   
- |  └─...   
+ │  ├─📄wp_manager.json   
+ │  ├─📄5497d3bd-c006-4ff2-948a-ad4e40aaa7d9.dat   
+ │  └─...   
  ├─📄weport.exe   
- ├─📄update.exe   
- ├─📄ver.msl   
+ ├─📄aurora4m.exe   
+ ├─📄aurora4m.cfg   
+ ├─📄aurora4m_lib.dll   
+ ├─📄ver.dat   
+ ├─📄weport.exe   
  └─📄weport.json   
 
 ## Development Tools Versions   
-* RUST version: v.1.94.0 (4a4ef493e 2026-03-02)   
+* RUST version: v.1.96.0 (ac68faa20 2026-05-25)   
 * RUST edition: 2024   
-* TAURI version: v.2.10.3   
-* TAURI-CLI version: v.2.10.1   
+* TAURI version: v.2.11.3   
+* TAURI-CLI version: v.2.11.3   
 
 ## Version Information   
 

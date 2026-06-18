@@ -1,7 +1,7 @@
 {
   "name": "weport",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "Copyright (C) 2025 Monoslab. All rights reserved. This work is licensed under the Business Source License 1.1 - Monoslab (BUSL-1.1-Monoslab).",
   "author": "Monoslab <chps74@naver.com>",
   "type": "module",
